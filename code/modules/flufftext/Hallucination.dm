@@ -111,28 +111,30 @@ Gunshots/explosions/opening doors/less rare audio (done)
 			if(41 to 65)
 				//Strange audio
 				//to_chat(src, "Strange Audio")
+
+				//CHOMPEdit - "store sound in variable so it can be played on master channel"
+				var/hal_sound = null
+				var/hal_sound_2 = null
 				switch(rand(1,12))
-					if(1) src << 'sound/machines/door/old_airlock.ogg'
+					if(1) hal_sound = 'sound/machines/door/old_airlock.ogg'
 					if(2)
-						if(prob(50))src << 'sound/effects/Explosion1.ogg'
-						else src << 'sound/effects/Explosion2.ogg'
-					if(3) src << 'sound/effects/explosionfar.ogg'
-					if(4) src << 'sound/effects/Glassbr1.ogg'
-					if(5) src << 'sound/effects/Glassbr2.ogg'
-					if(6) src << 'sound/effects/Glassbr3.ogg'
-					if(7) src << 'sound/machines/twobeep.ogg'
-					if(8) src << 'sound/machines/door/windowdoor.ogg'
+						if(prob(50)) hal_sound = 'sound/effects/Explosion1.ogg'
+						else hal_sound = 'sound/effects/Explosion2.ogg'
+					if(3) hal_sound = 'sound/effects/explosionfar.ogg'
+					if(4) hal_sound = 'sound/effects/Glassbr1.ogg'
+					if(5) hal_sound = 'sound/effects/Glassbr2.ogg'
+					if(6) hal_sound = 'sound/effects/Glassbr3.ogg'
+					if(7) hal_sound = 'sound/machines/twobeep.ogg'
+					if(8) hal_sound = 'sound/machines/door/windowdoor.ogg'
 					if(9)
 						//To make it more realistic, I added two gunshots (enough to kill)
-						src << 'sound/weapons/Gunshot1.ogg'
-						spawn(rand(10,30))
-							src << 'sound/weapons/Gunshot2.ogg'
-					if(10) src << 'sound/weapons/smash.ogg'
+						hal_sound = 'sound/weapons/Gunshot1.ogg'
+						hal_sound_2 = 'sound/weapons/Gunshot2.ogg'
+					if(10) hal_sound = 'sound/weapons/smash.ogg'
 					if(11)
 						//Same as above, but with tasers.
-						src << 'sound/weapons/Taser.ogg'
-						spawn(rand(10,30))
-							src << 'sound/weapons/Taser.ogg'
+						hal_sound = 'sound/weapons/Taser.ogg'
+						hal_sound_2 = 'sound/weapons/Taser.ogg'
 				//Rare audio
 					if(12)
 //These sounds are (mostly) taken from Hidden: Source
@@ -141,7 +143,17 @@ Gunshots/explosions/opening doors/less rare audio (done)
 							'sound/hallucinations/growl3.ogg', 'sound/hallucinations/im_here1.ogg', 'sound/hallucinations/im_here2.ogg', 'sound/hallucinations/i_see_you1.ogg', 'sound/hallucinations/i_see_you2.ogg',\
 							'sound/hallucinations/look_up1.ogg', 'sound/hallucinations/look_up2.ogg', 'sound/hallucinations/over_here1.ogg', 'sound/hallucinations/over_here2.ogg', 'sound/hallucinations/over_here3.ogg',\
 							'sound/hallucinations/turn_around1.ogg', 'sound/hallucinations/turn_around2.ogg', 'sound/hallucinations/veryfar_noise.ogg', 'sound/hallucinations/wail.ogg')
-						src << pick(creepyasssounds)
+						hal_sound = pick(creepyasssounds)
+				//CHOMPEdit End
+
+				//CHOMPEdit - "sound now obeys master channel volume"
+				if (hal_sound)
+					src.playsound_local(get_turf(src), hal_sound, 50, 0)
+				if (hal_sound_2)
+					spawn(rand(10,30))
+						src.playsound_local(get_turf(src), hal_sound_2, 50, 0)
+				//CHOMPEdit End
+
 			if(66 to 70)
 				//Flashes of danger
 				//to_chat(src, "Danger Flash")
