@@ -662,8 +662,23 @@
 				throw_alert("oxy", /obj/screen/alert/not_enough_n2o)
 
 	else
-		// We're in safe limits
-		clear_alert("oxy")
+		if (hal_screwyhud == SCREWYHUD_OXYGEN) // CHOMPEdit - "support indicator hallucinations"
+			switch(breath_type)
+				if("oxygen")
+					throw_alert("oxy", /obj/screen/alert/not_enough_oxy)
+				if("phoron")
+					throw_alert("oxy", /obj/screen/alert/not_enough_tox)
+				if("nitrogen")
+					throw_alert("oxy", /obj/screen/alert/not_enough_nitro)
+				if("carbon_dioxide")
+					throw_alert("oxy", /obj/screen/alert/not_enough_co2)
+				if("volatile_fuel")
+					throw_alert("oxy", /obj/screen/alert/not_enough_fuel)
+				if("nitrous_oxide")
+					throw_alert("oxy", /obj/screen/alert/not_enough_n2o)
+		else
+			// We're in safe limits
+			clear_alert("oxy")
 
 	inhaled_gas_used = inhaling/6
 
@@ -707,7 +722,10 @@
 			breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
 		throw_alert("tox_in_air", /obj/screen/alert/tox_in_air)
 	else
-		clear_alert("tox_in_air")
+		if (hal_screwyhud == SCREWYHUD_TOXIN)  // CHOMPEdit - "support indicator hallucinations"
+			throw_alert("tox_in_air", /obj/screen/alert/tox_in_air)
+		else
+			clear_alert("tox_in_air")
 
 	// If there's some other shit in the air lets deal with it here.
 	if(breath.gas["nitrous_oxide"])
@@ -1441,7 +1459,10 @@
 		var/obj/machinery/camera/cam = client.eye
 		client.screen |= cam.client_huds
 
-	if(stat == DEAD) //Dead
+	// CHOMPEdit: - "support indicator hallucinations"
+	if(stat == DEAD || hal_screwyhud == SCREWYHUD_DEAD) //Dead
+		if(hal_screwyhud == SCREWYHUD_DEAD) healths.overlays = null
+		// CHOMPEdit End
 		if(!druggy)		see_invisible = SEE_INVISIBLE_LEVEL_TWO
 		if(healths)		healths.icon_state = "health7"	//DEAD healthmeter
 
@@ -1520,11 +1541,11 @@
 					health_images += image('icons/mob/OnFire.dmi',"[get_fire_icon_state()]")
 
 				// Show a general pain/crit indicator if needed.
-				if(trauma_val)
+				if(trauma_val || hal_screwyhud == SCREWYHUD_CRIT)
 					if(!(species.flags & NO_PAIN))
 						if(trauma_val > 0.7)
 							health_images += image('icons/mob/screen1_health.dmi',"softcrit")
-						if(trauma_val >= 1)
+						if(trauma_val >= 1 || hal_screwyhud == SCREWYHUD_CRIT) // CHOMPEdit - "support indicator hallucinations"
 							health_images += image('icons/mob/screen1_health.dmi',"hardcrit")
 				else if(no_damage)
 					health_images += image('icons/mob/screen1_health.dmi',"fullhealth")

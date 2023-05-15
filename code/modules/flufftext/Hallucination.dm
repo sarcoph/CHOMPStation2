@@ -29,9 +29,9 @@ Gunshots/explosions/opening doors/less rare audio (done)
 			if(0 to 15)
 				//Screwy HUD
 				//to_chat(src, "Screwy HUD")
-				hal_screwyhud = pick(1,2,3,3,4,4)
+				hal_screwyhud = pick(SCREWYHUD_POOL) // CHOMPEdit - "use screwyhud defines"
 				spawn(rand(100,250))
-					hal_screwyhud = 0
+					hal_screwyhud = SCREWYHUD_NONE // CHOMPEdit - "use screwyhud defines"
 			if(16 to 25)
 				//Strange items
 				//to_chat(src, "Traitor Items")
@@ -177,7 +177,7 @@ Gunshots/explosions/opening doors/less rare audio (done)
 						spawn(rand(50,80)) //Only seen for a brief moment.
 							if(client) client.images -= halbody
 							halbody = null
-			// CHOMP Removal - "annoying hallucination"
+			// CHOMP Removal - "annoying/unfitting hallucination"
 			/*if(71 to 72)
 				//Fake death
 //				src.sleeping_willingly = 1
